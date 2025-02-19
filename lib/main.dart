@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:whatschat/pages/loginpage.dart';
+import 'package:whatschat/providers/themeprovider.dart';
 import 'package:whatschat/theme/theme.dart';
 
+
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),  // Inicia el ThemeProvider
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: appTheme,
-      home: SplashScreen(),
+    // Aquí usamos el tema proporcionado por el ThemeProvider
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: themeProvider.currentTheme,  // Obtiene el tema actual
+          home: SplashScreen(),
+        );
+      },
     );
   }
 }
