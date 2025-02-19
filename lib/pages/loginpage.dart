@@ -46,7 +46,8 @@ class LoginPage extends StatelessWidget {
             Text('Not a member?'),
             TextButton(
               onPressed: () {},
-              child: Text('Register'),
+              child: Text('Register',
+              style: TextStyle(color: theme.colorScheme.secondary),),
             ),
           ],
         ),

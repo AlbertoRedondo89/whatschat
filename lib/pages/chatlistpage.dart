@@ -25,7 +25,7 @@ class ChatListPage extends StatelessWidget {
                   color: theme.primaryColor, // 🔹 Color de fondo del header
                 ),
                 child: Text(
-                  'Aju',
+                  'Ajustes',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
@@ -76,7 +76,7 @@ class ChatListPage extends StatelessWidget {
               ),
               child: ListTile(
                 contentPadding: EdgeInsets.all(16.0),
-                leading: CircleAvatar(backgroundColor: theme.primaryColor),
+                leading: CircleAvatar(backgroundColor: theme.colorScheme.primary),
                 title: Text(
                   'Usuario $index',
                   style: TextStyle(color: theme.textTheme.bodyMedium?.color), // 🔹 Color del texto según el tema
