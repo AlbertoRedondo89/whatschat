@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
+  bool value = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,8 +10,8 @@ class SettingsPage extends StatelessWidget {
         children: [
           SwitchListTile(
             title: Text('Notificaciones'),
-            value: true,
-            onChanged: (bool value) {},
+            value: value,
+            onChanged: (value) {value = !value;},
           ),
           ListTile(
             title: Text('Cambiar contraseña'),
