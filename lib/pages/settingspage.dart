@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:whatschat/preferences/preferences.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  static const String routerName = 'settings';
+
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends  State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,16 +19,30 @@ class SettingsPage extends StatelessWidget {
         children: [
           SwitchListTile(
             title: Text('Notificaciones'),
-            value: true,
-            onChanged: (bool value) {},
+            value: Preferences.Notificaciones,
+            onChanged: (value) {
+              Preferences.Notificaciones = value;
+              setState(() {});
+            },
+            
           ),
-          ListTile(
-            title: Text('Cambiar contraseña'),
-            onTap: () {},
+          TextFormField(
+            initialValue: Preferences.nombre,
+            onChanged: (value) {
+              Preferences.nombre = value;
+              setState(() {});
+            },
+            decoration: InputDecoration(
+            labelText: 'Nombre', helperText: 'Nombre del usuario'),
           ),
-          ListTile(
-            title: Text('Idioma'),
-            onTap: () {},
+          TextFormField(
+            initialValue: Preferences.password,
+            onChanged: (value) {
+              Preferences.password = value;
+              setState(() {});
+            },
+            decoration: InputDecoration(
+            labelText: 'Contraseña', helperText: 'Contraseña del usuario'),
           ),
           ListTile(
             title: Text('Cerrar sesión'),

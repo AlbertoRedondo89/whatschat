@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:whatschat/pages/loginpage.dart';
 import 'package:whatschat/theme/theme.dart';
+import 'package:whatschat/preferences/preferences.dart';
+import 'package:whatschat/services/notification_service.dart';
 
-void main() {
+void main() async{
+  // This line is required when doing async operations in main
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize preferences
+  await initNotifications();
+  await Preferences.init();
+
   runApp(MyApp());
 }
 
