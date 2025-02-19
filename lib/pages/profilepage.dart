@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whatschat/preferences/preferences.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -17,8 +18,12 @@ class ProfilePage extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             child: Column(
               children: [
-                TextField(
-                  decoration: InputDecoration(labelText: 'Nombre', border: OutlineInputBorder()),
+                TextFormField(
+                  initialValue: Preferences.nombre,
+                  onChanged: (value) {
+                    Preferences.nombre = value;
+                  },
+                  decoration: InputDecoration(labelText: "Nombre", border: OutlineInputBorder()),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(onPressed: () {}, child: Text('Guardar cambios')),
