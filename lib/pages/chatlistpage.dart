@@ -18,6 +18,9 @@ class ChatListPage extends StatelessWidget {
             ListTile(title: Text('Ajustes'), onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
             }),
+            ListTile(title: Text('Cerrar sesión'), onTap: () {
+              Navigator.pop(context);
+            }),
           ],
         ),
       ),

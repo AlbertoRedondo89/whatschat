@@ -33,7 +33,11 @@ class ChatPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'Escribe un mensaje...'),
+                      decoration: InputDecoration(hintText: 'Escribe un mensaje...', 
+                                                  fillColor: Colors.white, 
+                                                  filled: true, 
+                                                  border: OutlineInputBorder(),
+                                                  ),
                     ),
                   ),
                   IconButton(
