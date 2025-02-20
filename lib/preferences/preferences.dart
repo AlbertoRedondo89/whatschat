@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
@@ -7,6 +9,7 @@ class Preferences {
   static String _password = "";
   static String _idioma = "Español";
   static bool _Notificaciones = true;
+  static String _imagePath = "";
   
 
   static Future init() async{
@@ -46,6 +49,16 @@ class Preferences {
   static set Notificaciones(bool Notificaciones){
     _Notificaciones = Notificaciones;
     _prefs.setBool('DarkMode', Notificaciones);
+  }
+
+  static Future<void> setImage(File imageFile) async {
+    _imagePath = imageFile.path; // Guarda la ruta de la imagen
+    await _prefs.setString('imagePath', _imagePath);
+  }
+
+  static File? get image {
+    String path = _prefs.getString('imagePath') ?? "";
+    return path.isNotEmpty ? File(path) : null;
   }
   
 }
