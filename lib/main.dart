@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:whatschat/pages/loginpage.dart';
+import 'package:whatschat/providers/preferencesprovider.dart';
 import 'package:whatschat/theme/theme.dart';
 import 'package:whatschat/preferences/preferences.dart';
 import 'package:whatschat/services/notification_service.dart';
@@ -16,8 +17,11 @@ void main() async{
   await Preferences.init();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),  // Inicia el ThemeProvider
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PreferencesProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), 
+      ],
       child: MyApp(),
     ),
   );

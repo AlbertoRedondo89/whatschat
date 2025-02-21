@@ -11,6 +11,7 @@ class Preferences {
   static bool _Notificaciones = true;
   static String _imagePath = "";
   static bool _modoOscuro = false;
+  static bool _rememberMe = false;
   
 
   static Future init() async{
@@ -67,6 +68,13 @@ class Preferences {
   static set modoOscuro(bool value) {
     _modoOscuro = value;
     _prefs.setBool('modoOscuro', value);
+  }
+
+  // Recuérdame 
+  static bool get rememberMe => _prefs.getBool('rememberMe') ?? _rememberMe;
+  static set rememberMe(bool value) {
+    _rememberMe = value;
+    _prefs.setBool('rememberMe', value);
   }
 
 }
