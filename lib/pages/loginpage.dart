@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:whatschat/pages/chatlistpage.dart';
+import 'package:whatschat/providers/themeprovider.dart';
 
 
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -25,6 +30,10 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.secondary,
+                foregroundColor: Colors.white
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -37,7 +46,8 @@ class LoginPage extends StatelessWidget {
             Text('Not a member?'),
             TextButton(
               onPressed: () {},
-              child: Text('Register'),
+              child: Text('Register',
+              style: TextStyle(color: theme.colorScheme.secondary),),
             ),
           ],
         ),

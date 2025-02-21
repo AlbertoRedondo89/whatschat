@@ -10,6 +10,7 @@ class Preferences {
   static String _idioma = "Español";
   static bool _Notificaciones = true;
   static String _imagePath = "";
+  static bool _modoOscuro = false;
   
 
   static Future init() async{
@@ -61,4 +62,11 @@ class Preferences {
     return path.isNotEmpty ? File(path) : null;
   }
   
+  // Modo oscuro 🔹
+  static bool get modoOscuro => _prefs.getBool('modoOscuro') ?? _modoOscuro;
+  static set modoOscuro(bool value) {
+    _modoOscuro = value;
+    _prefs.setBool('modoOscuro', value);
+  }
+
 }
