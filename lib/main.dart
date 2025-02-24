@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:whatschat/pages/loginpage.dart';
+import 'package:whatschat/providers/boton_grupos_provider.dart';
 import 'package:whatschat/providers/preferencesprovider.dart';
 import 'package:whatschat/theme/theme.dart';
 import 'package:whatschat/preferences/preferences.dart';
@@ -21,6 +22,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()), 
+        ChangeNotifierProvider(create: (_) => BotonGruposProvider()),
       ],
       child: MyApp(),
     ),
