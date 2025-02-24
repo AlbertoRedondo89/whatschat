@@ -7,6 +7,7 @@ import 'package:whatschat/theme/theme.dart';
 import 'package:whatschat/preferences/preferences.dart';
 import 'package:whatschat/services/notification_service.dart';
 import 'package:whatschat/providers/themeprovider.dart';
+import 'package:whatschat/providers/apiprovider.dart';
 
 void main() async{
   // This line is required when doing async operations in main
@@ -20,7 +21,8 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()), 
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'localhost:3000'))
       ],
       child: MyApp(),
     ),
