@@ -4,6 +4,7 @@ import 'package:whatschat/preferences/preferences.dart';
 import 'package:whatschat/providers/themeprovider.dart';
 
 class SettingsPage extends StatelessWidget {
+  final ValueNotifier<bool> notificacionesNotifier = ValueNotifier<bool>(Preferences.Notificaciones);
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -14,13 +15,19 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           // Notificaciones
-          SwitchListTile(
-            title: Text('Notificaciones', style: TextStyle(color: textColor)),
-            value: Preferences.Notificaciones,
-            onChanged: (bool value) {
-              Preferences.Notificaciones = value;
-            },
-          ),
+           ValueListenableBuilder<bool>(
+          valueListenable: notificacionesNotifier,
+          builder: (context, value, child) {
+            return SwitchListTile(
+              title: Text('Notificaciones', style: TextStyle(color: textColor)),
+              value: value,
+              onChanged: (bool newValue) {
+                Preferences.Notificaciones = newValue;
+                notificacionesNotifier.value = newValue; // Actualiza el notifier
+              },
+            );
+          },
+        ),
 
           // Campo para el nombre
           Padding(
