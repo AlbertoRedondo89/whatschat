@@ -22,7 +22,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'localhost:3000'))
+        ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'https://apifac.onrender.com'))
       ],
       child: MyApp(),
     ),

@@ -32,18 +32,22 @@ class ApiProvider extends ChangeNotifier {
   }
 
   Future<dynamic> login(String username, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'username': username, 'password': password}),
-    );
+  final response = await http.post(
+    Uri.parse('$baseUrl/login'),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({'USERNAME': username, 'PASSWORD': password}),
+  );
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to login');
-    }
+  print('Request body: ${json.encode({'username': username, 'password': password})}');
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to login: ${response.body}');
   }
+}
 
   Future<dynamic> register(Map<String, dynamic> data) async {
     final response = await http.post(

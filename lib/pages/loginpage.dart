@@ -39,6 +39,9 @@ class _LoginPageState extends State<LoginPage> {
     } catch (error) {
       print('Login failed: $error');
       // Mostrar un mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $error')),
+      );
     }
   }
 
