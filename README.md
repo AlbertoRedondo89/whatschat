@@ -20,7 +20,8 @@ Para subir la api hemos usado render, como despues de un tiempo de inactividad e
 te voy a explicar como puedes subir tu la api. una vez registrado en render, vas ha crear un proyecto y cuando te pida 
 elegir de donde sacar la api pulsa github, este es el enlace del github de la api https://github.com/Felip-Torres/apiFac/tree/main,
 creo que tendras que copiarlo ha tu github.
-En los ajustes solo tienes que cambiar dos cosas, el build command por esta linea: pip install -r requirements.txt
+
+En los ajustes solo tienes que cambiar dos cosas, el build command por esta linea: pip install -r requirements.txt /N
 y el start command por esta: uvicorn app:app --host 0.0.0.0 --port 10000
 con esto simplemente seria darle a deploy y esperar ha que te diga que esta listo en la consola de comandos.
 Acuerdate de cambiar la direccion de la api por la tuya, en el main.
