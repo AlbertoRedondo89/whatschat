@@ -82,16 +82,21 @@ class ChatListPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16.0),
-                    leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.primary),
+                    leading: CircleAvatar(
+                      backgroundImage: message['image'] != null
+                          ? NetworkImage(message['image'])
+                          : AssetImage('assets/images/user_avatar.png'),
+                      backgroundColor: Theme.of(context).colorScheme.primary
+                    ),
                     title: Text(
-                      message['username'],
+                      message['username'] + '\t' + message['time'],
                       style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                     ),
                     subtitle: Text(message['message']),
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'])),
+                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'], icon: message['image'] != null ? message['image'] : 'null')),
                       );
                     },
                   ),

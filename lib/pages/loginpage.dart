@@ -96,17 +96,21 @@ class _LoginPageState extends State<LoginPage> {
             Text('Sign In',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
-            TextField(
+            TextFormField(
               controller: _nombreController,
+              onChanged: (value) => Preferences.nombre = value,
               decoration: InputDecoration(
-                  labelText: 'Username', border: OutlineInputBorder()),
+                labelText: 'Username', border: OutlineInputBorder()
+              ),
             ),
             SizedBox(height: 10),
-            TextField(
+            TextFormField(
               controller: _passwordController,
               obscureText: true,
+              onChanged: (value) => Preferences.password = value,
               decoration: InputDecoration(
-                  labelText: 'Password', border: OutlineInputBorder()),
+                labelText: 'Password', border: OutlineInputBorder()
+              ),
             ),
             SizedBox(height: 10),
             SwitchListTile(

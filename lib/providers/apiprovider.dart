@@ -89,12 +89,25 @@ class ApiProvider extends ChangeNotifier {
   }
 
   Future<dynamic> getUsersMessages(int loadSize, String user1, String user2) async {
-    final response = await http.get(Uri.parse('$baseUrl/getMessages/$loadSize/$user1/$user2'));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('$baseUrl/getMessages/$loadSize/$user1/$user2'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'token=$token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to get user messages');
+      }
     } else {
-      throw Exception('Failed to get user messages');
+      throw Exception('No token found');
     }
   }
 
@@ -122,12 +135,25 @@ class ApiProvider extends ChangeNotifier {
   }
 
   Future<dynamic> getFriends(String username) async {
-    final response = await http.get(Uri.parse('$baseUrl/getFriends/$username'));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('$baseUrl/getFriends/$username'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'token=$token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to get friends');
+      }
     } else {
-      throw Exception('Failed to get friends');
+      throw Exception('No token found');
     }
   }
 
@@ -140,28 +166,28 @@ class ApiProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(Map<String, dynamic> message) async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
 
-  if (token != null) {
-    final response = await http.post(
-      Uri.parse('$baseUrl/sendMessage'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': 'token=$token',
-      },
-      body: jsonEncode(message),
-    );
+    if (token != null) {
+      final response = await http.post(
+        Uri.parse('$baseUrl/sendMessage'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'token=$token',
+        },
+        body: jsonEncode(message),
+      );
 
-    if (response.statusCode == 200) {
-      print('Message sent successfully');
+      if (response.statusCode == 200) {
+        print('Message sent successfully');
+      } else {
+        print('Failed to send message: ${response.statusCode}');
+      }
     } else {
-      print('Failed to send message: ${response.statusCode}');
+      print('No token found');
     }
-  } else {
-    print('No token found');
   }
-}
 
   Future<dynamic> updateUserAdminStatus(int userId, int groupId) async {
     final response = await http.post(
