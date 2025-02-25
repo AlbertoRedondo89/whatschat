@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:whatschat/pages/chatpage.dart';
 import 'package:whatschat/pages/profilepage.dart';
 import 'package:whatschat/pages/settingspage.dart';
+import 'package:whatschat/preferences/preferences.dart';
 import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/boton_grupos_provider.dart';
 import 'package:whatschat/providers/themeprovider.dart';
-import 'package:whatschat/providers/apiprovider.dart';
 
 class ChatListPage extends StatelessWidget {
   @override
@@ -67,6 +67,11 @@ class ChatListPage extends StatelessWidget {
                 _buildChatList(context, isDarkMode), // Lista de chats normales
                 Center(child: Text('No hay grupos disponibles')), // Sección de grupos vacía
               ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => _showNewChatModal(context),
+              child: Icon(Icons.add),
+              backgroundColor: theme.primaryColor,
             ),
           );
         }
@@ -143,6 +148,58 @@ class ChatListPage extends StatelessWidget {
             },
           );
         }
+      },
+    );
+  }
+
+  void _showNewChatModal(BuildContext context) {
+    final TextEditingController _usernameController = TextEditingController();
+    final TextEditingController _messageController = TextEditingController();
+    final apiProvider = Provider.of<ApiProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Nuevo Chat'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(labelText: 'Nombre de receptor'),
+              ),
+              TextFormField(
+                controller: _messageController,
+                decoration: InputDecoration(labelText: 'Mensaje'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Enviar'),
+              onPressed: () async {
+                if (_usernameController.text.isNotEmpty && _messageController.text.isNotEmpty) {
+                  final message = {
+                    'sender': Preferences.nombre,
+                    'receiver': _usernameController.text,
+                    'body': _messageController.text,
+                  };
+
+                  await apiProvider.sendMessage(message);
+
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
       },
     );
   }
