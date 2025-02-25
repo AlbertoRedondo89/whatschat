@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatschat/pages/chatlistpage.dart';
+import 'package:whatschat/pages/register_page.dart';
 import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/preferencesprovider.dart';
 import 'package:whatschat/preferences/preferences.dart';
@@ -65,14 +66,20 @@ class _LoginPageState extends State<LoginPage> {
         'IMAGE':
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
       });
+      
       final token = response['token'];
       if (token != null) {
         // Guardar el token en SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
       }
+
       print('Register successful: $response');
-      _login();
+      // Navegar a la siguiente página o guardar el token de autenticación
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatListPage()),
+      );
     } catch (error) {
       print('Register failed: $error');
       // Mostrar un mensaje de error
@@ -140,8 +147,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 20),
             Text('Not a member?'),
-            TextButton(
-              onPressed: _register,
+           TextButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _nombreController.text = result['username'] ?? "";
+                    _passwordController.text = result['password'] ?? "";
+                  });
+                }
+              },
               child: Text(
                 'Register',
                 style: TextStyle(color: theme.colorScheme.secondary),
