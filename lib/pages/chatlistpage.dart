@@ -12,37 +12,81 @@ class ChatListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-    final botonProvider = Provider.of<BotonGruposProvider>(context); // 🔹 Accede al índice de la pestaña
+    final botonProvider = Provider.of<BotonGruposProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chats'),
+    return DefaultTabController(
+      length: 2,
+      child: Builder(
+        builder: (context) {
+          final TabController tabController = DefaultTabController.of(context)!;
+          
+          tabController.addListener(() {
+            if (!tabController.indexIsChanging) {
+              botonProvider.setIndex(tabController.index);
+            }
+          });
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Chats'),
+              bottom: TabBar(
+                controller: tabController,
+                indicatorColor: Colors.white,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(icon: Icon(Icons.chat), text: "Chats"),
+                  Tab(icon: Icon(Icons.group), text: "Grupos"),
+                ],
+              ),
+            ),
+            drawer: Drawer(
+              child: ListView(
+                children: [
+                  DrawerHeader(
+                    decoration: BoxDecoration(color: theme.primaryColor),
+                    child: Text('Ajustes', style: TextStyle(color: Colors.white, fontSize: 20)),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Perfil'),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage())),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text('Ajustes'),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage())),
+                  ),
+                ],
+              ),
+            ),
+            body: TabBarView(
+              controller: tabController,
+              children: [
+                _buildChatList(context, isDarkMode, false), // Lista de chats normales
+                _buildChatList(context, isDarkMode, true), // Lista de grupos
+              ],
+            ),
+            floatingActionButton: Consumer<BotonGruposProvider>(
+              builder: (context, tabProvider, child) {
+                return tabProvider.currentIndex == 1
+                    ? FloatingActionButton(
+                        backgroundColor: theme.colorScheme.secondary,
+                        child: Icon(Icons.add, color: Colors.white),
+                        onPressed: () {
+                          print("Añadir grupo");
+                        },
+                      )
+                    : SizedBox.shrink();
+              },
+            ),
+          );
+        },
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: theme.primaryColor),
-              child: Text('Ajustes', style: TextStyle(color: Colors.white, fontSize: 20)),
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Perfil'),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage())),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Ajustes'),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage())),
-            ),
-          ],
-        ),
-      ),
-      body: _buildChatList(context, isDarkMode),
     );
   }
 
-  Widget _buildChatList(BuildContext context, bool isDarkMode) {
+  Widget _buildChatList(BuildContext context, bool isDarkMode, bool isGroup) {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
     return FutureBuilder(
@@ -61,7 +105,8 @@ class ChatListPage extends StatelessWidget {
             itemCount: messages.length,
             itemBuilder: (context, index) {
               final message = messages[index];
-              final isGroup = message['isGroup'] ?? false;
+              final bool messageIsGroup = message['isGroup'] ?? false;
+              if (messageIsGroup != isGroup) return SizedBox.shrink();
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -85,8 +130,8 @@ class ChatListPage extends StatelessWidget {
                     leading: CircleAvatar(
                       backgroundImage: message['image'] != null
                           ? NetworkImage(message['image'])
-                          : AssetImage('assets/images/user_avatar.png'),
-                      backgroundColor: Theme.of(context).colorScheme.primary
+                          : AssetImage('assets/images/user_avatar.png') as ImageProvider,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     title: Text(
                       message['username'] + '\t' + message['time'],
@@ -96,7 +141,12 @@ class ChatListPage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'], icon: message['image'] != null ? message['image'] : 'null')),
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            username: message['username'],
+                            icon: message['image'] != null ? message['image'] : 'null',
+                          ),
+                        ),
                       );
                     },
                   ),
