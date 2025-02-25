@@ -28,4 +28,5 @@ Acuerdate de cambiar la direccion de la api por la tuya, en el main.
 Para la base de datos usamos railway, pero ese nunca se desconecta.
 
 Render:https://dashboard.render.com/
+
 Railway:https://railway.com/
