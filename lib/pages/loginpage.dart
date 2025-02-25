@@ -45,6 +45,30 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _register() async{
+    final apiProvider = Provider.of<ApiProvider>(context, listen: false);
+    try {
+      final response = await apiProvider.register({
+        'USERNAME': _nombreController.text,
+        'PASSWORD': _passwordController.text,
+        'BIO': 'Hello, Im using WhatsChat!',
+        'IMAGE':'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+      });
+      print('Register successful: $response');
+      // Navegar a la siguiente página o guardar el token de autenticación
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatListPage()),
+      );
+    } catch (error) {
+      print('Register failed: $error');
+      // Mostrar un mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Register failed: $error')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -97,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 20),
             Text('Not a member?'),
             TextButton(
-              onPressed: () {},
+              onPressed: _register,
               child: Text(
                 'Register',
                 style: TextStyle(color: theme.colorScheme.secondary),
