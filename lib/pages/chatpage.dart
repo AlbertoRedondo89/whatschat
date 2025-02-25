@@ -44,8 +44,8 @@ class _ChatPageState extends State<ChatPage> {
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder(
-                stream: apiProvider.getMessagesStream(50, Preferences.nombre, widget.username),
+              child: FutureBuilder(
+                future: apiProvider.getUsersMessages(50, Preferences.nombre, widget.username),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
