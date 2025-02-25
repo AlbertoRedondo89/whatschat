@@ -20,7 +20,7 @@ class ChatPage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/chat_background.png"),
+            image: AssetImage("assets/images/chat_background.jpg"),
             repeat: ImageRepeat.repeat,
           ),
         ),
