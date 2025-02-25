@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatschat/pages/chatlistpage.dart';
+import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/preferencesprovider.dart';
 import 'package:whatschat/preferences/preferences.dart';
 
@@ -20,6 +21,28 @@ class _LoginPageState extends State<LoginPage> {
     _rememberMe = Preferences.rememberMe;  // 🔹 Cargar estado de "Recuérdame"
     _nombreController = TextEditingController(text: _rememberMe ? Preferences.nombre : "");
     _passwordController = TextEditingController(text: _rememberMe ? Preferences.password : "");
+  }
+
+  void _login() async {
+    final apiProvider = Provider.of<ApiProvider>(context, listen: false);
+    try {
+      final response = await apiProvider.login(
+        _nombreController.text,
+        _passwordController.text,
+      );
+      print('Login successful: $response');
+      // Navegar a la siguiente página o guardar el token de autenticación
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatListPage()),
+      );
+    } catch (error) {
+      print('Login failed: $error');
+      // Mostrar un mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $error')),
+      );
+    }
   }
 
   @override
@@ -68,16 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: theme.colorScheme.secondary,
                 foregroundColor: Colors.white,
               ),
-              onPressed: () {
-                if (_rememberMe) {
-                  Preferences.nombre = _nombreController.text;
-                  Preferences.password = _passwordController.text;
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ChatListPage()),
-                );
-              },
+              onPressed: _login,
               child: Text('Login'),
             ),
             SizedBox(height: 20),
