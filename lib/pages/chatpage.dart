@@ -37,7 +37,7 @@ class _ChatPageState extends State<ChatPage> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/chat_background.jpg"),
+            image: AssetImage("assets/images/chat_background.png"),
             repeat: ImageRepeat.repeat,
           ),
         ),
