@@ -63,22 +63,9 @@ class ChatListPage extends StatelessWidget {
             body: TabBarView(
               controller: tabController,
               children: [
-                _buildChatList(context, isDarkMode, false), // Lista de chats normales
-                _buildChatList(context, isDarkMode, true), // Lista de grupos
+                _buildChatList(context, isDarkMode), // Lista de chats normales
+                Center(child: Text('No hay grupos disponibles')), // Sección de grupos vacía
               ],
-            ),
-            floatingActionButton: Consumer<BotonGruposProvider>(
-              builder: (context, tabProvider, child) {
-                return tabProvider.currentIndex == 1
-                    ? FloatingActionButton(
-                        backgroundColor: theme.colorScheme.secondary,
-                        child: Icon(Icons.add, color: Colors.white),
-                        onPressed: () {
-                          print("Añadir grupo");
-                        },
-                      )
-                    : SizedBox.shrink();
-              },
             ),
           );
         },
@@ -86,7 +73,7 @@ class ChatListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildChatList(BuildContext context, bool isDarkMode, bool isGroup) {
+  Widget _buildChatList(BuildContext context, bool isDarkMode) {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
     return FutureBuilder(
@@ -106,7 +93,7 @@ class ChatListPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final message = messages[index];
               final bool messageIsGroup = message['isGroup'] ?? false;
-              if (messageIsGroup != isGroup) return SizedBox.shrink();
+              if (messageIsGroup) return SizedBox.shrink();
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
