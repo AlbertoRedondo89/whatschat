@@ -65,20 +65,14 @@ class _LoginPageState extends State<LoginPage> {
         'IMAGE':
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
       });
-      
       final token = response['token'];
       if (token != null) {
         // Guardar el token en SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
       }
-
       print('Register successful: $response');
-      // Navegar a la siguiente página o guardar el token de autenticación
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ChatListPage()),
-      );
+      _login();
     } catch (error) {
       print('Register failed: $error');
       // Mostrar un mensaje de error
