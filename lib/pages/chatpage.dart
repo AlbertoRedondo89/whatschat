@@ -71,6 +71,7 @@ class _ChatPageState extends State<ChatPage> {
                         final message = messages[index];
                         final sender = message['username'] ?? '';
                         final text = message['body'] ?? '';
+                        final time = message['date'] ?? '';
                         final isCurrentUser = sender == Preferences.nombre;
 
                         // Muestra cada mensaje en un ListTile
@@ -84,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
-                                text,
+                                text + '\n' + time,
                                 style: TextStyle(color: isCurrentUser ? Colors.white : Colors.black),
                               ),
                             ),
