@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatschat/preferences/preferences.dart';
+import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/themeprovider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -78,7 +79,9 @@ class SettingsPage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app, color: theme.iconTheme.color),
             title: Text('Cerrar sesión', style: TextStyle(color: textColor)),
-            onTap: () {},
+            onTap: () {
+              Provider.of<ApiProvider>(context, listen: false).logout(context);
+            },
           ),
 
           Divider(),

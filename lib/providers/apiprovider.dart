@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:whatschat/pages/loginpage.dart';
 
 class ApiProvider extends ChangeNotifier {
   final String baseUrl;
@@ -244,4 +245,16 @@ class ApiProvider extends ChangeNotifier {
       throw Exception('Failed to update profile');
     }
   }
+
+    Future<void> logout(BuildContext context) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('token'); // Elimina el token de sesión
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+        (Route<dynamic> route) => false,
+      );
+    }
+
 }
