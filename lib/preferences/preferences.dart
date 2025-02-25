@@ -12,7 +12,6 @@ class Preferences {
   static String _imagePath = "";
   static bool _modoOscuro = false;
   static bool _rememberMe = false;
-  
 
   static Future init() async{
     _prefs = await SharedPreferences.getInstance();
