@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider extends ChangeNotifier {
   final String baseUrl;
@@ -125,15 +126,27 @@ class ApiProvider extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> sendMessage(Map<String, dynamic> message) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/sendMessage'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(message),
-    );
+  Future<void> sendMessage(Map<String, dynamic> message) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print('Token: $token');
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+    if (token != null) {
+      final response = await http.post(
+        Uri.parse('$baseUrl/sendMessage'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Cookie': 'token=$token',
+        },
+        body: jsonEncode(message),
+      );
+
+      if (response.statusCode == 200) {
+        print('Message sent successfully');
+      } else {
+        print('Failed to send message: ${response.statusCode}');
+      }
     } else {
       throw Exception('Failed to send message');
     }

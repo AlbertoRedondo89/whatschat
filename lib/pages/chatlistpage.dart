@@ -12,20 +12,12 @@ class ChatListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-    final botonProvider = Provider.of<BotonGruposProvider>(context); // 🔹 Accede al índice de la pestaña
 
     return DefaultTabController(
       length: 2,
       child: Builder(
         builder: (context) {
           final TabController tabController = DefaultTabController.of(context)!;
-          
-          // 🔹 Detecta cuando cambia la pestaña (tap o swipe)
-          tabController.addListener(() {
-            if (!tabController.indexIsChanging) { // 🔹 Solo cuando realmente cambió
-              botonProvider.setIndex(tabController.index);
-            }
-          });
 
           return Scaffold(
             appBar: AppBar(
@@ -65,7 +57,6 @@ class ChatListPage extends StatelessWidget {
               controller: tabController,
               children: [
                 _buildChatList(context, isDarkMode), // 🔹 Lista de Chats
-                _buildGroupList(context, isDarkMode),  // 🔹 Lista de Grupos
               ],
             ),
             floatingActionButton: Consumer<BotonGruposProvider>(
@@ -131,7 +122,12 @@ class ChatListPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16.0),
-                    leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.primary),
+                    leading: CircleAvatar(
+                      backgroundImage: message['imageUrl'] != null
+                        ? NetworkImage(message['imageUrl'])
+                        : AssetImage('assets/images/user_avatar.png') as ImageProvider,
+                      backgroundColor: Theme.of(context).colorScheme.primary
+                    ),
                     title: Text(
                       message['username'],
                       style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
@@ -140,72 +136,7 @@ class ChatListPage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'])),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildGroupList(BuildContext context, bool isDarkMode) {
-    final apiProvider = Provider.of<ApiProvider>(context, listen: false);
-
-
-    return FutureBuilder(
-      future: apiProvider.getHome(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data.isEmpty) {
-          return Center(child: Text('No hay mensajes disponibles'));
-        } else {
-          final messages = snapshot.data['contacts'];
-
-
-          return ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-              final isGroup = message['isGroup'] ?? false;
-
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.grey[900] : Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: isDarkMode
-                        ? []
-                        : [
-                            BoxShadow(
-                              color: Colors.black26,
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16.0),
-                    leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.primary),
-                    title: Text(
-                      message['username'],
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
-                    ),
-                    subtitle: Text(message['message']),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'])),
+                        MaterialPageRoute(builder: (context) => ChatPage(username: message['username'], icon: message['imageUrl'] != null? message['imageUrl']:"null",)),
                       );
                     },
                   ),
