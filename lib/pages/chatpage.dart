@@ -3,11 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:whatschat/preferences/preferences.dart';
 import 'package:whatschat/providers/apiprovider.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final String username;
   final String icon;
 
   ChatPage({required this.username, required this.icon});
+
+  @override
+  _ChatPageState createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +25,12 @@ class ChatPage extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: icon != "null"
-                  ? NetworkImage(icon)
+              backgroundImage: widget.icon != "null"
+                  ? NetworkImage(widget.icon)
                   : AssetImage('assets/images/user_avatar.png') as ImageProvider,
             ),
             SizedBox(width: 10),
-            Text(username),
+            Text(widget.username),
           ],
         ),
       ),
@@ -38,7 +45,7 @@ class ChatPage extends StatelessWidget {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: apiProvider.getUsersMessages(50, Preferences.nombre, username),
+                future: apiProvider.getUsersMessages(50, Preferences.nombre, widget.username),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -86,6 +93,7 @@ class ChatPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: _messageController,
                       decoration: InputDecoration(
                         hintText: 'Escribe un mensaje...',
                         fillColor: Colors.white,
@@ -96,8 +104,20 @@ class ChatPage extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.send),
-                    onPressed: () {
-                      // Implementar el envío de mensajes aquí
+                    onPressed: () async {
+                      if (_messageController.text.isNotEmpty) {
+                        final message = {
+                          'sender': Preferences.nombre,
+                          'receiver': widget.username,
+                          'body': _messageController.text,
+                        };
+
+                        await apiProvider.sendMessage(message);
+
+                        setState(() {
+                          _messageController.clear();
+                        });
+                      }
                     },
                   ),
                 ],

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:whatschat/pages/chatpage.dart';
 import 'package:whatschat/pages/profilepage.dart';
 import 'package:whatschat/pages/settingspage.dart';
+import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/boton_grupos_provider.dart';
 import 'package:whatschat/providers/themeprovider.dart';
 import 'package:whatschat/providers/apiprovider.dart';
@@ -68,7 +69,7 @@ class ChatListPage extends StatelessWidget {
               ],
             ),
           );
-        },
+        }
       ),
     );
   }

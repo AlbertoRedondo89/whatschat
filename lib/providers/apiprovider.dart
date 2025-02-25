@@ -168,12 +168,14 @@ class ApiProvider extends ChangeNotifier {
   Future<void> sendMessage(Map<String, dynamic> message) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    print('Token: $token');
 
     if (token != null) {
       final response = await http.post(
         Uri.parse('$baseUrl/sendMessage'),
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
           'Cookie': 'token=$token',
         },
         body: jsonEncode(message),
