@@ -79,6 +79,7 @@ class ChatListPage extends StatelessWidget {
     );
   }
 
+  // Método para construir la lista de chats
   Widget _buildChatList(BuildContext context, bool isDarkMode) {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
@@ -86,20 +87,20 @@ class ChatListPage extends StatelessWidget {
       future: apiProvider.getHome(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator()); // Muestra un indicador de carga mientras se obtienen los datos
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}')); // Muestra un mensaje de error si ocurre un error
         } else if (!snapshot.hasData || snapshot.data.isEmpty) {
-          return Center(child: Text('No hay mensajes disponibles'));
+          return Center(child: Text('No hay mensajes disponibles')); // Muestra un mensaje si no hay datos disponibles
         } else {
-          final messages = snapshot.data['contacts'];
+          final messages = snapshot.data['contacts']; // Obtiene la lista de contactos
 
           return ListView.builder(
             itemCount: messages.length,
             itemBuilder: (context, index) {
               final message = messages[index];
               final bool messageIsGroup = message['isGroup'] ?? false;
-              if (messageIsGroup) return SizedBox.shrink();
+              if (messageIsGroup) return SizedBox.shrink(); // Oculta los mensajes de grupo
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -152,6 +153,7 @@ class ChatListPage extends StatelessWidget {
     );
   }
 
+  // Método para mostrar el modal de nuevo chat
   void _showNewChatModal(BuildContext context) {
     final TextEditingController _usernameController = TextEditingController();
     final TextEditingController _messageController = TextEditingController();
@@ -179,7 +181,7 @@ class ChatListPage extends StatelessWidget {
             TextButton(
               child: Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Cierra el modal sin hacer nada
               },
             ),
             TextButton(
@@ -192,9 +194,9 @@ class ChatListPage extends StatelessWidget {
                     'body': _messageController.text,
                   };
 
-                  await apiProvider.sendMessage(message);
+                  await apiProvider.sendMessage(message); // Envía el mensaje
 
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Cierra el modal después de enviar el mensaje
                 }
               },
             ),

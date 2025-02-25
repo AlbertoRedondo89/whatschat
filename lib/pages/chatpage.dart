@@ -24,18 +24,21 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         title: Row(
           children: [
+            // Muestra el avatar del usuario
             CircleAvatar(
               backgroundImage: widget.icon != "null"
                   ? NetworkImage(widget.icon)
                   : AssetImage('assets/images/user_avatar.png') as ImageProvider,
             ),
             SizedBox(width: 10),
+            // Muestra el nombre del usuario
             Text(widget.username),
           ],
         ),
       ),
       body: Container(
         decoration: BoxDecoration(
+          // Establece una imagen de fondo para el chat
           image: DecorationImage(
             image: AssetImage("assets/images/chat_background.png"),
             repeat: ImageRepeat.repeat,
@@ -44,19 +47,24 @@ class _ChatPageState extends State<ChatPage> {
         child: Column(
           children: [
             Expanded(
+              // Usa FutureBuilder para obtener los mensajes del usuario
               child: FutureBuilder(
                 future: apiProvider.getUsersMessages(50, Preferences.nombre, widget.username),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Muestra un indicador de carga mientras se obtienen los datos
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
+                    // Muestra un mensaje de error si ocurre un error
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data.isEmpty) {
+                    // Muestra un mensaje si no hay datos disponibles
                     return Center(child: Text('No hay mensajes disponibles'));
                   } else {
                     final response = snapshot.data as Map<String, dynamic>;
                     final messages = response['messages'] as List<dynamic>;
 
+                    // Construye una lista de mensajes
                     return ListView.builder(
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
@@ -65,6 +73,7 @@ class _ChatPageState extends State<ChatPage> {
                         final text = message['body'] ?? '';
                         final isCurrentUser = sender == Preferences.nombre;
 
+                        // Muestra cada mensaje en un ListTile
                         return ListTile(
                           title: Align(
                             alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -91,6 +100,7 @@ class _ChatPageState extends State<ChatPage> {
               padding: EdgeInsets.all(8.0),
               child: Row(
                 children: [
+                  // Campo de texto para escribir un mensaje
                   Expanded(
                     child: TextField(
                       controller: _messageController,
@@ -102,6 +112,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
+                  // Botón para enviar el mensaje
                   IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () async {
@@ -112,8 +123,10 @@ class _ChatPageState extends State<ChatPage> {
                           'body': _messageController.text,
                         };
 
+                        // Envía el mensaje usando el apiProvider
                         await apiProvider.sendMessage(message);
 
+                        // Limpia el campo de texto después de enviar el mensaje
                         setState(() {
                           _messageController.clear();
                         });

@@ -7,6 +7,7 @@ import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/preferencesprovider.dart';
 import 'package:whatschat/preferences/preferences.dart';
 
+// Página de login.
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -17,45 +18,32 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _passwordController;
   late bool _rememberMe;
 
+  // Inicializa el estado de la página de login.
   @override
   void initState() {
     super.initState();
-    _rememberMe = Preferences.rememberMe; // 🔹 Cargar estado de "Recuérdame"
-    _nombreController =
-        TextEditingController(text: _rememberMe ? Preferences.nombre : "");
-    _passwordController =
-        TextEditingController(text: _rememberMe ? Preferences.password : "");
+    _rememberMe = Preferences.rememberMe;
+    _nombreController = TextEditingController(text: _rememberMe ? Preferences.nombre : "");
+    _passwordController = TextEditingController(text: _rememberMe ? Preferences.password : "");
   }
 
+  // Método para hacer login.
   void _login() async {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
     try {
-      final response = await apiProvider.login(
-        _nombreController.text,
-        _passwordController.text,
-      );
+      final response = await apiProvider.login(_nombreController.text, _passwordController.text);
       final token = response['token'];
       if (token != null) {
-        // Guardar el token en SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
       }
-
-      print('Login successful: $response');
-      // Navegar a la siguiente página o guardar el token de autenticación
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ChatListPage()),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatListPage()));
     } catch (error) {
-      print('Login failed: $error');
-      // Mostrar un mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: $error')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: $error')));
     }
   }
 
+  // Método para registrar un usuario.
   void _register() async {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
     try {
@@ -63,29 +51,16 @@ class _LoginPageState extends State<LoginPage> {
         'USERNAME': _nombreController.text,
         'PASSWORD': _passwordController.text,
         'BIO': 'Hello, Im using WhatsChat!',
-        'IMAGE':
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        'IMAGE': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       });
-      
       final token = response['token'];
       if (token != null) {
-        // Guardar el token en SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
       }
-
-      print('Register successful: $response');
-      // Navegar a la siguiente página o guardar el token de autenticación
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ChatListPage()),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatListPage()));
     } catch (error) {
-      print('Register failed: $error');
-      // Mostrar un mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Register failed: $error')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Register failed: $error')));
     }
   }
 
@@ -102,24 +77,19 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Image.asset('assets/images/logo.png', height: 100),
             SizedBox(height: 20),
-            Text('Sign In',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('Sign In', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             TextFormField(
               controller: _nombreController,
               onChanged: (value) => Preferences.nombre = value,
-              decoration: InputDecoration(
-                labelText: 'Username', border: OutlineInputBorder()
-              ),
+              decoration: InputDecoration(labelText: 'Username', border: OutlineInputBorder()),
             ),
             SizedBox(height: 10),
             TextFormField(
               controller: _passwordController,
               obscureText: true,
               onChanged: (value) => Preferences.password = value,
-              decoration: InputDecoration(
-                labelText: 'Password', border: OutlineInputBorder()
-              ),
+              decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
             ),
             SizedBox(height: 10),
             SwitchListTile(
@@ -138,22 +108,15 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.secondary,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.secondary, foregroundColor: Colors.white),
               onPressed: _login,
               child: Text('Login'),
             ),
             SizedBox(height: 20),
             Text('Not a member?'),
-           TextButton(
+            TextButton(
               onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-
+                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
                 if (result != null) {
                   setState(() {
                     _nombreController.text = result['username'] ?? "";
@@ -161,10 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 }
               },
-              child: Text(
-                'Register',
-                style: TextStyle(color: theme.colorScheme.secondary),
-              ),
+              child: Text('Register', style: TextStyle(color: theme.colorScheme.secondary)),
             ),
           ],
         ),
@@ -172,3 +132,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+

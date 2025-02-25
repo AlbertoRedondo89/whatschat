@@ -10,6 +10,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
+  // Método para seleccionar una imagen desde la cámara o la galería
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
@@ -19,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  // Muestra un diálogo de confirmación para la imagen seleccionada
   void _showConfirmationDialog(File image) {
     showDialog(
       context: context,
@@ -38,16 +40,16 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(context), // Cierra el diálogo
               child: Text("Cancelar"),
             ),
             TextButton(
               onPressed: () async {
-                await Preferences.setImage(image);
+                await Preferences.setImage(image); // Guarda la imagen en las preferencias
                 setState(() {
-                  
+                  // Actualiza el estado para reflejar la nueva imagen
                 });
-                Navigator.pop(context);
+                Navigator.pop(context); // Cierra el diálogo
               },
               child: Text("Aceptar"),
             ),
@@ -57,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // Muestra opciones para seleccionar una imagen desde la cámara o la galería
   void _showImagePickerOptions() {
     showModalBottomSheet(
       context: context,
@@ -68,16 +71,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 leading: Icon(Icons.camera_alt),
                 title: Text("Tomar foto"),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.camera);
+                  Navigator.pop(context); // Cierra el modal
+                  _pickImage(ImageSource.camera); // Selecciona una imagen desde la cámara
                 },
               ),
               ListTile(
                 leading: Icon(Icons.photo_library),
                 title: Text("Elegir de la galería"),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.gallery);
+                  Navigator.pop(context); // Cierra el modal
+                  _pickImage(ImageSource.gallery); // Selecciona una imagen desde la galería
                 },
               ),
             ],
@@ -95,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: _showImagePickerOptions, // Muestra opciones
+            onTap: _showImagePickerOptions, // Muestra opciones para seleccionar una imagen
             child: CircleAvatar(
               radius: 120,
               backgroundImage: Preferences.image != null
@@ -111,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextFormField(
                   initialValue: Preferences.nombre,
                   onChanged: (value) {
-                    Preferences.nombre = value;
+                    Preferences.nombre = value; // Actualiza el nombre en las preferencias
                   },
                   decoration: InputDecoration(
                       labelText: "Nombre", border: OutlineInputBorder()),

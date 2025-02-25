@@ -23,6 +23,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        //Cambio de la URL de la API por la tuya en caso de que uses render
         ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'https://apifac.onrender.com')),
         ChangeNotifierProvider(create: (_) => BotonGruposProvider()),
       ],

@@ -65,21 +65,11 @@ class SettingsPage extends StatelessWidget {
 
           // Opciones adicionales
           ListTile(
-            leading: Icon(Icons.lock, color: theme.iconTheme.color),
-            title: Text('Cambiar contraseña', style: TextStyle(color: textColor)),
-            onTap: () {},
-          ),
-
-          ListTile(
-            leading: Icon(Icons.language, color: theme.iconTheme.color),
-            title: Text('Idioma', style: TextStyle(color: textColor)),
-            onTap: () {},
-          ),
-
-          ListTile(
             leading: Icon(Icons.exit_to_app, color: theme.iconTheme.color),
             title: Text('Cerrar sesión', style: TextStyle(color: textColor)),
             onTap: () {
+              Preferences.nombre = '';
+              Preferences.password = '';
               Provider.of<ApiProvider>(context, listen: false).logout(context);
             },
           ),
