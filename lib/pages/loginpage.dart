@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatschat/pages/chatlistpage.dart';
 import 'package:whatschat/providers/apiprovider.dart';
 import 'package:whatschat/providers/preferencesprovider.dart';
@@ -18,9 +19,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _rememberMe = Preferences.rememberMe;  // 🔹 Cargar estado de "Recuérdame"
-    _nombreController = TextEditingController(text: _rememberMe ? Preferences.nombre : "");
-    _passwordController = TextEditingController(text: _rememberMe ? Preferences.password : "");
+    _rememberMe = Preferences.rememberMe; // 🔹 Cargar estado de "Recuérdame"
+    _nombreController =
+        TextEditingController(text: _rememberMe ? Preferences.nombre : "");
+    _passwordController =
+        TextEditingController(text: _rememberMe ? Preferences.password : "");
   }
 
   void _login() async {
@@ -30,6 +33,13 @@ class _LoginPageState extends State<LoginPage> {
         _nombreController.text,
         _passwordController.text,
       );
+      final token = response['token'];
+      if (token != null) {
+        // Guardar el token en SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+      }
+
       print('Login successful: $response');
       // Navegar a la siguiente página o guardar el token de autenticación
       Navigator.push(
@@ -45,14 +55,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _register() async{
+  void _register() async {
     final apiProvider = Provider.of<ApiProvider>(context, listen: false);
     try {
       final response = await apiProvider.register({
         'USERNAME': _nombreController.text,
         'PASSWORD': _passwordController.text,
         'BIO': 'Hello, Im using WhatsChat!',
-        'IMAGE':'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        'IMAGE':
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
       });
       print('Register successful: $response');
       // Navegar a la siguiente página o guardar el token de autenticación
@@ -82,17 +93,20 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Image.asset('assets/images/logo.png', height: 100),
             SizedBox(height: 20),
-            Text('Sign In', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('Sign In',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             TextField(
               controller: _nombreController,
-              decoration: InputDecoration(labelText: 'Username', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                  labelText: 'Username', border: OutlineInputBorder()),
             ),
             SizedBox(height: 10),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                  labelText: 'Password', border: OutlineInputBorder()),
             ),
             SizedBox(height: 10),
             SwitchListTile(
