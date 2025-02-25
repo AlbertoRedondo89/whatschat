@@ -112,6 +112,33 @@ class ApiProvider extends ChangeNotifier {
     }
   }
 
+  Stream<dynamic> getMessagesStream(int loadSize, String user1, String user2) async* {
+    while (true) {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        final response = await http.get(
+          Uri.parse('$baseUrl/getMessages/$loadSize/$user1/$user2'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': 'token=$token',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          yield json.decode(response.body);
+        } else {
+          throw Exception('Failed to get user messages');
+        }
+      } else {
+        throw Exception('No token found');
+      }
+
+      await Future.delayed(Duration(seconds: 2)); // Polling interval
+    }
+  }
+
   Future<dynamic> getHome() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
