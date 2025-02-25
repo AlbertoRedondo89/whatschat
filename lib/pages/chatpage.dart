@@ -11,7 +11,8 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            CircleAvatar(backgroundImage: AssetImage('assets/user_avatar.png')),
+            CircleAvatar(
+                backgroundImage: AssetImage('assets/images/user_avatar.png')),
             SizedBox(width: 10),
             Text(username),
           ],
@@ -33,11 +34,12 @@ class ChatPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'Escribe un mensaje...', 
-                                                  fillColor: Colors.white, 
-                                                  filled: true, 
-                                                  border: OutlineInputBorder(),
-                                                  ),
+                      decoration: InputDecoration(
+                        hintText: 'Escribe un mensaje...',
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
                   IconButton(

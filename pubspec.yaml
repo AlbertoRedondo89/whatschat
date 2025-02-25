@@ -44,6 +44,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +53,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/imags/logoMini.png" 
+  image_path: "assets/images/logoMini.png" 
   adaptive_icon_background: "#ffffff"  
   adaptive_icon_foreground: "assets/images/logoMini.png"  # 🔹 Solo en Android 8+ (opcional)
 
