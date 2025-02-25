@@ -23,7 +23,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'https://apifac.onrender.com'))
+        ChangeNotifierProvider(create: (_) => ApiProvider(baseUrl: 'https://apifac.onrender.com')),
         ChangeNotifierProvider(create: (_) => BotonGruposProvider()),
       ],
       child: MyApp(),
